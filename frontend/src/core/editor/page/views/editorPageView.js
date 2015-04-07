@@ -97,7 +97,8 @@ define(function(require){
         var allowFullWidth = (0 === components.length) || (1 === components.length && inSameBlock);
 
         if(allowFullWidth) {
-          // TODO: do something here...
+          $('.paste-zone-component', componentView.$el.parent()).removeClass('drop-only');
+          componentView.showDropZones();
         }
       }
     },
