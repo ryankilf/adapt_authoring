@@ -33,7 +33,7 @@ define(function(require){
       this.listenTo(Origin, 'editorView:moveArticle:' + this.model.get('_id'), this.render);
       this.listenTo(Origin, 'editorView:cutArticle:' + this.model.get('_id'), this.onCutArticle);
       this.listenTo(Origin, 'editingOverlay:views:hide', this.persistScrollPosition);
-      this.listenTo(Origin, 'pageView:itemRendered', this.evaluateChildStatus);
+      this.listenTo(Origin, 'pageView:itemRendered', this.onItemRendered);
 
       var captureScroll = function() {
         $(window).scroll(function() {
@@ -72,15 +72,33 @@ define(function(require){
         return _.contains(blockList, component.get('_parentId'));
       });
 
+      this.model.set('_blocks', blocks);
+
       this.childrenCount = articles.length + blocks.length + components.length;
     },
 
-    evaluateChildStatus: function() {
+    onItemRendered: function() {
       this.childrenRenderedCount++;
 
       if (this.childrenCount == this.childrenRenderedCount) {
+        // listen for drag events on components
+        Origin.on('componentView:startDrag', _.bind(this.showDropZones, this));
         // All child controls of the page have been rendered so persist the scroll position
         this.persistScrollPosition();
+      }
+    },
+
+    showDropZones: function(componentView) {
+      var blocks = this.model.get('_blocks');
+
+      for(var i = 0, len = blocks.length; i < len; i++) {
+        var components = Origin.editor.data.components.where({ _parentId: blocks[i].get('_id') })
+        var inSameBlock = componentView.model.get('_parentId') === blocks[i].get('_id');
+        var allowFullWidth = (0 === components.length) || (1 === components.length && inSameBlock);
+
+        if(allowFullWidth) {
+          // TODO: do something here...
+        }
       }
     },
 

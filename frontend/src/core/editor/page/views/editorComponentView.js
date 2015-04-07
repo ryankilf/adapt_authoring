@@ -114,6 +114,7 @@ define(function(require){
         },
         start: function(event) {
           // Using the initial offset we're able to position the window back in place
+          Origin.trigger('componentView:startDrag', view);
           $(window).scrollTop(view.$el.offset().top -view.offsetTopFromWindow);
         },
         stop: function () {
