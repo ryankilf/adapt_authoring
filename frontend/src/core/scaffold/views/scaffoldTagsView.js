@@ -41,6 +41,8 @@ define(function(require) {
         },
 
         render: function() {
+            console.log(this.model.get('tags'))
+            console.log(this.value);
             this.setValue(this.value);
             _.delay(_.bind(function() {
                 this.$el.tagsInput({
@@ -56,11 +58,14 @@ define(function(require) {
         },
 
         getValue: function() {
+            console.log('get value', this.model.get('tags'));
             return this.model.get('tags');
         },
 
         setValue: function(value) {
+            console.log(value);
             var values = Helpers.pickCSV(value, "title");
+            this.model.set('tags', value);
             this.$el.val(values);
         },
 

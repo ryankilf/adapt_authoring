@@ -95,7 +95,7 @@ function initialize () {
 
           var tags = [];
           results && results.forEach (function (item) {
-            tags.push({title: item.title, value: item.title, _id: item._id});
+            tags.push({title: item.title, value: item.title});
           });
 
           res.statusCode = 200;
