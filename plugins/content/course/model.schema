@@ -442,7 +442,7 @@
       "type": "array",
       "inputType": "Tags",
       "items": {
-        "type": "objectid",
+        "type": "string",
         "inputType": "Text",
         "required": false,
         "ref": "tag"
