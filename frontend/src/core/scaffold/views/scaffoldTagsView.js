@@ -58,8 +58,9 @@ define(function(require) {
         },
 
         getValue: function() {
-            console.log('get value', this.model.get('tags'));
-            return this.model.get('tags');
+
+            console.log('get value', _.pluck(this.model.get('tags'), '_id'));
+            return _.pluck(this.model.get('tags'), '_id');
         },
 
         setValue: function(value) {
