@@ -80,7 +80,7 @@ define(function(require){
     publishProject: function(event) {
       event && event.preventDefault();
 
-      var canPublish = this.validateCourseContent();
+      var canPublish = validateCourseContent();
 
       if (canPublish && !Origin.editor.isPublishPending) {
         $('.editor-common-sidebar-publishing-progress').animate({ width: '100%' }, 30000);
@@ -120,7 +120,7 @@ define(function(require){
       event && event.preventDefault();
 
       var self = this;
-      var canPreview = self.validateCourseContent();
+      var canPreview = validateCourseContent();
 
       if (canPreview && !Origin.editor.isPreviewPending) {
         Origin.editor.isPreviewPending = true;
@@ -335,68 +335,6 @@ define(function(require){
       _.defer(function(){
         Origin.trigger('editorView:cut' + type + ':' + view.model.get('_parentId'), view);
       });
-    },
-
-    validateCourseContent: function() {
-
-      // Store current course
-      var currentCourse = Origin.editor.data.course;
-
-      // Let's do a standard check for at least one child object
-      var containsAtLeastOneChild = true;
-
-      var alerts = [];
-
-      function interateOverChildren(model) {
-
-        // Return the function if no children - on components
-        if(!model._children) return;
-
-        var currentChildren = model.getChildren();
-
-        // Do validate across each item
-        if (currentChildren.length == 0) {
-
-          containsAtLeastOneChild = false;
-
-          alerts.push(
-            "There seems to be a "
-              + model.get('_type')
-              + " with the title - '"
-              + model.get('title')
-              + "' with no "
-              + model._children
-          );
-
-          return;
-        } else {
-
-          // Go over each child and call validation again
-          currentChildren.each(function(childModel) {
-            interateOverChildren(childModel);
-          });
-
-        }
-
-      }
-
-      interateOverChildren(currentCourse);
-
-      if(alerts.length > 0) {
-        var errorMessage = "";
-        for(var i = 0, len = alerts.length; i < len; i++) {
-          errorMessage += "<li>" + alerts[i] + "</li>";
-        }
-
-        Origin.Notify.alert({
-          type: 'error',
-          title: window.polyglot.t('app.validationfailed'),
-          text: errorMessage,
-          callback: _.bind(this.validateCourseConfirm, this)
-        });
-      }
-
-      return containsAtLeastOneChild;
     },
 
     validateCourseConfirm: function(isConfirmed) {
