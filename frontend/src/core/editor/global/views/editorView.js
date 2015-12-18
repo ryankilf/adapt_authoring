@@ -22,6 +22,7 @@ define(function(require){
   var EditorClipboardModel = require('editorGlobal/models/editorClipboardModel');
   var EditorComponentTypeModel = require('editorPage/models/editorComponentTypeModel');
   var ExtensionModel = require('editorExtensions/models/extensionModel');
+  var Helpers = require('coreJS/app/helpers');
 
   var EditorView = EditorOriginView.extend({
 
@@ -80,7 +81,7 @@ define(function(require){
     publishProject: function(event) {
       event && event.preventDefault();
 
-      var canPublish = validateCourseContent();
+      var canPublish = Helpers.validateCourseContent();
 
       if (canPublish && !Origin.editor.isPublishPending) {
         $('.editor-common-sidebar-publishing-progress').animate({ width: '100%' }, 30000);
@@ -120,7 +121,7 @@ define(function(require){
       event && event.preventDefault();
 
       var self = this;
-      var canPreview = validateCourseContent();
+      var canPreview = Helpers.validateCourseContent();
 
       if (canPreview && !Origin.editor.isPreviewPending) {
         Origin.editor.isPreviewPending = true;
@@ -335,12 +336,6 @@ define(function(require){
       _.defer(function(){
         Origin.trigger('editorView:cut' + type + ':' + view.model.get('_parentId'), view);
       });
-    },
-
-    validateCourseConfirm: function(isConfirmed) {
-      if (isConfirmed) {
-        Origin.trigger('editor:courseValidation');
-      }
     }
 
   }, {
